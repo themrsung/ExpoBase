@@ -12,6 +12,19 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public final class ExpoBase extends JavaPlugin {
     /**
+     * Instance.
+     */
+    private static ExpoBase instance = null;
+
+    /**
+     * Returns the instance.
+     * @return The instance
+     */
+    public static @NotNull ExpoBase getInstance() {
+        return Optional.ofNullable(instance).orElseThrow(IllegalStateException::new);
+    }
+
+    /**
      * The loader instance.
      */
     private static final @NotNull ExpoLoader loader = new ExpoLoader();
@@ -59,6 +72,9 @@ public final class ExpoBase extends JavaPlugin {
 
         UUID uniqueId = UUID.randomUUID();
         registeredModules.put(uniqueId, module);
+
+        module.onRegistered(getInstance());
+
         return uniqueId;
     }
 
@@ -79,7 +95,11 @@ public final class ExpoBase extends JavaPlugin {
      * @return {@code true} if it was successfully removed
      */
     public static boolean unregisterModule(@NotNull UUID uniqueId) {
-        return registeredModules.remove(uniqueId) != null;
+        ExpoModule module = registeredModules.remove(uniqueId);
+        if (module == null) return false;
+
+        module.onUnregistered(getInstance());
+        return true;
     }
 
     @Override
