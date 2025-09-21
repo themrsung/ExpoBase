@@ -13,13 +13,14 @@ public interface ExpoModule {
     @NotNull String getName();
 
     /**
-     * Called when this module is loaded.
-     * @param expo The Expo base
+     * Called when this module is registered.
+     * @param expo The expo base
      */
-    default void onLoaded(@NotNull ExpoBase expo) {}
+    void onRegistered(@NotNull ExpoBase expo);
 
     /**
-     * Called when this module is unloaded.
+     * Called when this module is unregistered.
+     * @param expo The expo base
      */
-    default void onUnloaded() {}
+    void onUnregistered(@NotNull ExpoBase expo);
 }

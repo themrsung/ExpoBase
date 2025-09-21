@@ -3,22 +3,43 @@ package me.sjun.exponential;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public final class ExpoBase extends JavaPlugin {
     /**
-     * The modules directory.
+     * The loader instance.
      */
-    public static final @NotNull String MODULES_DIRECTORY = "plugins/Expo/modules";
+    private static final @NotNull ExpoLoader loader = new ExpoLoader();
+
+    /**
+     * Returns the loader instance.
+     * @return The loader instance
+     */
+    public static @NotNull ExpoLoader getLoader() {
+        return loader;
+    }
 
     /**
      * The map of registered modules.
      */
     private static final @NotNull Map<UUID, ExpoModule> registeredModules = new ConcurrentHashMap<>();
+
+    /**
+     * Returns the map of registered modules.
+     * @return The map of registered modules
+     */
+    public static @NotNull Map<UUID, ExpoModule> getRegisteredModuleMap() {
+        return Map.copyOf(registeredModules);
+    }
+
+    /**
+     * Returns the list of registered modules.
+     * @return The list of registered modules
+     */
+    public static @NotNull List<ExpoModule> getRegisteredModules() {
+        return List.copyOf(registeredModules.values());
+    }
 
     /**
      * Registers the module.
@@ -36,7 +57,7 @@ public final class ExpoBase extends JavaPlugin {
      * @param name The name of the module
      * @return The module
      */
-    public static @NotNull Optional<ExpoModule> getModule(@NotNull String name) {
+    public static @NotNull Optional<ExpoModule> getRegisteredModule(@NotNull String name) {
         return registeredModules.values().stream()
                 .filter(v -> Objects.equals(v.getName(), name))
                 .findAny();
