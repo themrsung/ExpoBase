@@ -11,8 +11,10 @@ import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.LinkedHashSet;
 import java.util.ServiceConfigurationError;
 import java.util.ServiceLoader;
+import java.util.Set;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -116,7 +118,29 @@ public class ExpoLoader {
     }
 
     public void loadAllModules() {
+        Path moduleDirectory = Paths.get(MODULES_DIRECTORY);
+        if (!Files.isDirectory(moduleDirectory)) return;
 
+        Set<String> moduleNames = new LinkedHashSet<>();
+        try (DirectoryStream<Path> stream = Files.newDirectoryStream(moduleDirectory)) {
+            for (Path path : stream) {
+                if (!Files.isRegularFile(path)) continue;
+
+                String fileName = path.getFileName().toString();
+                int extensionIndex = fileName.lastIndexOf('.');
+                if (extensionIndex <= 0) continue;
+
+                String extension = fileName.substring(extensionIndex + 1);
+                if (!"jar".equalsIgnoreCase(extension)) continue;
+
+                moduleNames.add(fileName.substring(0, extensionIndex));
+            }
+        } catch (IOException e) {
+            log(Level.SEVERE, "Failed to read module directory", e);
+            return;
+        }
+
+        moduleNames.forEach(this::loadModule);
     }
 
     private void log(@NotNull Level level, @NotNull String message, @NotNull Throwable throwable) {
