@@ -1,5 +1,9 @@
 package me.sjun.exponential;
 
+import me.sjun.exponential.command.DisableCommand;
+import me.sjun.exponential.command.InfoCommand;
+import me.sjun.exponential.command.ReloadCommand;
+import org.bukkit.command.CommandMap;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
@@ -74,7 +78,13 @@ public final class ExpoBase extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        // Plugin startup logic
+        CommandMap cm = getServer().getCommandMap();
+
+        cm.register("expo", new DisableCommand());
+        cm.register("expo", new InfoCommand());
+        cm.register("expo", new ReloadCommand());
+
+        loader.loadAllModules();
     }
 
     @Override

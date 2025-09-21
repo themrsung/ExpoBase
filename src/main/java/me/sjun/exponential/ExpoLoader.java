@@ -115,6 +115,10 @@ public class ExpoLoader {
         return loaded;
     }
 
+    public void loadAllModules() {
+
+    }
+
     private void log(@NotNull Level level, @NotNull String message, @NotNull Throwable throwable) {
         Logger logger;
         try {
