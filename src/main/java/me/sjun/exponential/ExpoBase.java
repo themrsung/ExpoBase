@@ -104,6 +104,8 @@ public final class ExpoBase extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        instance = this;
+
         CommandMap cm = getServer().getCommandMap();
 
         cm.register("expo", new DisableCommand());

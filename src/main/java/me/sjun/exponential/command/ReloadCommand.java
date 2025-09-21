@@ -62,22 +62,9 @@ public class ReloadCommand extends Command {
             };
         });
 
-        List<String> failedModules = new ArrayList<>();
-        moduleNames.forEach(name -> {
-                    if (ExpoBase.getLoader().loadModule(name)) return;
-                    failedModules.add(name);
-                });
-
-        sender.sendMessage(Component.text("Failed to load modules: ")
-                .append(Component.text(String.join(", ", failedModules.toArray(String[]::new)))));
-
-        if (failedModules.isEmpty()) {
-            sender.sendMessage(Component.text("Success!"));
-            return true;
-        } else {
-            sender.sendMessage(Component.text("One or more modules failed to reload."));
-            return false;
-        }
+        ExpoBase.getLoader().loadAllModules();
+        sender.sendMessage(Component.text("All modules reloaded!"));
+        return true;
     }
 
     private boolean unregisterModule(@NotNull UUID moduleId, @NotNull CommandSender sender, @NotNull String name) {
