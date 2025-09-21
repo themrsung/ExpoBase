@@ -91,14 +91,7 @@ public class ExpoLoader {
             for (ExpoModule module : modules) {
                 if (!module.getName().equalsIgnoreCase(targetName)) continue;
 
-                UUID moduleId = ExpoBase.registerModule(module);
-                try {
-                    module.onRegistered(expo);
-                } catch (RuntimeException exception) {
-                    ExpoBase.unregisterModule(moduleId);
-                    throw exception;
-                }
-
+                ExpoBase.registerModule(module);
                 loaded = true;
                 break;
             }
