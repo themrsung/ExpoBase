@@ -1,0 +1,27 @@
+name: ExpoBase
+author: sjun___
+description: Base plugin for Exponential.
+version: '1.0'
+main: me.sjun.exponential.ExpoBase
+api-version: '1.21'
+dependencies:
+  bootstrap:
+    Vault:
+      required: true
+    ItemsAdder:
+      required: true
+    PlayerAuctions:
+      required: false
+      load: AFTER
+    GriefPrevention:
+      required: true
+  server:
+    Vault:
+      required: true
+    ItemsAdder:
+      required: true
+    PlayerAuctions:
+      required: false
+      load: AFTER
+    GriefPrevention:
+      required: true
