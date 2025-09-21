@@ -51,6 +51,12 @@ public final class ExpoBase extends JavaPlugin {
      * @return The unique identifier of the registry
      */
     public static @NotNull UUID registerModule(@NotNull ExpoModule module) {
+        if (registeredModules.values().stream()
+                .map(ExpoModule::getName)
+                .anyMatch(module.getName()::equalsIgnoreCase)) {
+            throw new IllegalArgumentException("Module already registered!");
+        }
+
         UUID uniqueId = UUID.randomUUID();
         registeredModules.put(uniqueId, module);
         return uniqueId;
