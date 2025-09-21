@@ -5,6 +5,7 @@ import me.sjun.exponential.ExpoModule;
 import net.kyori.adventure.text.Component;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabExecutor;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -15,13 +16,14 @@ import java.util.UUID;
 /**
  * Reload module command.
  */
-public class ReloadCommand extends Command {
-    public ReloadCommand() {
-        super("exporeload");
-    }
-
+public class ReloadCommand implements TabExecutor {
     @Override
-    public boolean execute(@NotNull CommandSender sender, @NotNull String s, @NotNull String @NotNull [] args) {
+    public boolean onCommand(
+            @NotNull CommandSender sender,
+            @NotNull Command command,
+            @NotNull String label,
+            @NotNull String[] args
+    ) {
         if (!sender.isOp()) {
             sender.sendMessage(Component.text("Insufficient permissions."));
             return false;
@@ -59,14 +61,14 @@ public class ReloadCommand extends Command {
             String name = module.getName();
             if (unregisterModule(id, sender, name)) {
                 moduleNames.add(name);
-            };
+            }
         });
 
         List<String> failedModules = new ArrayList<>();
         moduleNames.forEach(name -> {
-                    if (ExpoBase.getLoader().loadModule(name)) return;
-                    failedModules.add(name);
-                });
+            if (ExpoBase.getLoader().loadModule(name)) return;
+            failedModules.add(name);
+        });
 
         sender.sendMessage(Component.text("Failed to load modules: ")
                 .append(Component.text(String.join(", ", failedModules.toArray(String[]::new)))));
@@ -91,7 +93,12 @@ public class ReloadCommand extends Command {
     }
 
     @Override
-    public @NotNull List<String> tabComplete(@NotNull CommandSender sender, @NotNull String alias, @NotNull String @NotNull [] args) throws IllegalArgumentException {
+    public @NotNull List<String> onTabComplete(
+            @NotNull CommandSender sender,
+            @NotNull Command command,
+            @NotNull String alias,
+            @NotNull String[] args
+    ) {
         if (!sender.isOp() || args.length < 1) return List.of();
         return ExpoBase.getRegisteredModules().stream()
                 .map(ExpoModule::getName)
